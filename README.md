@@ -1,29 +1,44 @@
-# Red Graphite
+# Red Graphite in Cupertino
 
-Bear-like look for Obsidian — typography and colors based on Bear's
-"Red Graphite" (default) theme, with red accents, red list bullets and
-Bear-style heading weights. Light and dark variants included.
+Bear-like "Red Graphite" styling (red accents, red list bullets, Bear heading
+weights, light + dark) as a **plugin overlay** — it layers on top of your
+current theme (e.g. Cupertino) instead of replacing it.
 
-## Установка через BRAT (рекомендуется для своих устройств)
+Сделано плагином, а не темой/сниппетом, специально чтобы:
+- не заменять твою основную тему;
+- раздаваться на все устройства через **BRAT** с автообновлением
+  (сниппеты BRAT раздавать не умеет, плагины — умеет).
 
-1. Установи плагин **BRAT** (Obsidian → Settings → Community plugins → BRAT) и включи его.
-2. Command palette → **BRAT: Add a beta theme**.
-3. Вставь ссылку на этот репозиторий: `https://github.com/isuvorov/obsidian-red-graphite`.
-4. BRAT скачает тему. Включи её: **Settings → Appearance → Themes → Red Graphite**.
+## Установка через BRAT
 
-Повтори шаги 2–4 на каждом устройстве/vault один раз. Дальше обновления
-прилетают автоматически (BRAT проверяет `version` в `manifest.json`).
+1. Установи и включи плагин **BRAT** (Settings → Community plugins).
+2. Command palette → **BRAT: Add a beta plugin**.
+3. Вставь: `https://github.com/isuvorov/obsidian-red-graphite`
+4. Включи плагин: Settings → Community plugins → **Red Graphite in Cupertino**.
 
-## Обновление темы
+CSS наложится поверх текущей темы. Выключишь плагин — оформление снимется.
+Повтори на каждом устройстве/vault один раз; дальше обновления прилетают сами.
 
-1. Правишь `theme.css`.
-2. Бампаешь `version` в `manifest.json` (например `1.0.0` → `1.0.1`).
-3. `git commit && git push`.
+> BRAT берёт `main.js` + `manifest.json` + `styles.css` из последнего GitHub **Release**.
+> Без релиза будет ошибка `no releases found` — см. ниже.
 
-BRAT на всех устройствах подтянет новую версию сам (или вручную:
-**BRAT: Check for updates to all beta plugins and themes**).
+## Выпуск новой версии (через CI)
 
-## Заметка про шрифт
+Релизы собирает GitHub Actions (`.github/workflows/release.yml`) при пуше тега.
+Вручную `gh release create` больше не нужен:
 
-Тема использует шрифт `Bear Sans UI` с фолбэком на системный (`-apple-system`).
-Если шрифт Bear не установлен в системе — будет системный шрифт, остальное оформление сохранится.
+1. Правишь `styles.css`.
+2. Бампаешь `version` в `manifest.json` (например `0.0.1` → `0.0.2`).
+3. Коммит, пуш, тег:
+   ```bash
+   git commit -am "v0.0.2"
+   git push
+   git tag 0.0.2
+   git push origin 0.0.2
+   ```
+
+CI проверит, что тег совпадает с `version` в `manifest.json`, и создаст
+Release с `main.js` + `manifest.json` + `styles.css`. BRAT на всех устройствах
+подтянет обновление автоматически.
+
+> Тег обязан совпадать с `version` в `manifest.json` — иначе CI упадёт намеренно.

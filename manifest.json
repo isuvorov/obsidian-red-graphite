@@ -1,7 +1,10 @@
 {
+  "id": "red-graphite-in-cupertino",
   "name": "Red Graphite in Cupertino",
   "version": "0.0.1",
   "minAppVersion": "1.5.0",
+  "description": "Bear-like Red Graphite styling (red accents, red list bullets, Bear heading weights) layered on top of your current theme as a plugin overlay.",
   "author": "Igor Suvorov",
-  "authorUrl": "https://github.com/isuvorov"
+  "authorUrl": "https://github.com/isuvorov",
+  "isDesktopOnly": false
 }

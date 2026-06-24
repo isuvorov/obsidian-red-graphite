@@ -1,0 +1,43 @@
+name: Release
+
+# Пуш тега вида 1.2.3 -> CI создаёт GitHub Release с файлами плагина.
+# BRAT тянет main.js + manifest.json + styles.css именно из релиза.
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag must match manifest.json version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          MANIFEST_VERSION="$(jq -r .version manifest.json)"
+          if [ "$MANIFEST_VERSION" != "$TAG" ]; then
+            echo "::error::Tag '$TAG' != manifest.json version '$MANIFEST_VERSION'. Бампни version в manifest.json перед тегом."
+            exit 1
+          fi
+
+      - name: Required files exist
+        run: |
+          for f in main.js manifest.json styles.css; do
+            test -f "$f" || { echo "::error::Нет файла $f"; exit 1; }
+          done
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            main.js manifest.json styles.css
